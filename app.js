@@ -8,6 +8,8 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const swaggerJsdoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -15,6 +17,22 @@ var productsRouter = require('./routes/products');
 const { logErrorMiddleware, validationErrorHandler, defaultErrorHandler } = require('./error/handlers');
 
 var app = express();
+
+if (process.env.ENVIRONMENT === 'dev') {
+  const swaggerOptions = {
+    definition: {
+      openapi: '3.0.0',
+      info: {
+        title: 'Products API',
+        version: '1.0.0',
+        description: 'A simple Express Products API',
+      },
+    },
+    apis: ['./routes/*.js'],
+  };
+  const swaggerSpec = swaggerJsdoc(swaggerOptions);
+  app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+}
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

@@ -26,6 +26,58 @@ const upload = multer({
     }),
 });
 
+/**
+ * @swagger
+ * /products:
+ *   post:
+ *     summary: Create a new product
+ *     description: Add a new product with name, description, price, and image
+ *     tags: [Products]
+ *     consumes:
+ *       - multipart/form-data
+ *     parameters:
+ *       - in: formData
+ *         name: name
+ *         type: string
+ *         required: true
+ *         description: Name of the product
+ *       - in: formData
+ *         name: description
+ *         type: string
+ *         required: true
+ *         description: Description of the product
+ *       - in: formData
+ *         name: price
+ *         type: integer
+ *         required: true
+ *         description: Price of the product (non-negative)
+ *       - in: formData
+ *         name: image
+ *         type: file
+ *         required: true
+ *         description: Product image (PNG, JPEG, JPG, max 500KB)
+ *     responses:
+ *       201:
+ *         description: Product created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: success
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                       example: 60d5ecb54b24e1234567890a
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Server error
+ */
 router.post(
     "/",
     bodyParser.urlencoded({ extended: false }),
