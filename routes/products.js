@@ -29,6 +29,63 @@ const upload = multer({
 /**
  * @swagger
  * /products:
+ *   get:
+ *     summary: Retrieve all products
+ *     description: Get a list of all products in the database
+ *     tags: [Products]
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: success
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: string
+ *                         example: 60d5ecb54b24e1234567890a
+ *                       name:
+ *                         type: string
+ *                         example: Product Name
+ *                       description:
+ *                         type: string
+ *                         example: Product Description
+ *                       price:
+ *                         type: number
+ *                         example: 99.99
+ *                       imageUrl:
+ *                         type: string
+ *                         example: /uploads/product_image.jpg
+ *       500:
+ *         description: Server error
+ */
+router.get("/", async(req, res, next) => {
+    try {
+        const products = await Product.find()
+    
+        return res.status(200).send({ message: 'success', data: products.map(product => ({
+            id: product._id,
+            name: product.name,
+            description: product.description,
+            price: product.price,
+            imageUrl: product.imageUrl
+        })) })
+    } catch (e) {
+        next(e)
+    }
+})
+
+/**
+ * @swagger
+ * /products:
  *   post:
  *     summary: Create a new product
  *     description: Add a new product with name, description, price, and image
